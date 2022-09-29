@@ -3,17 +3,18 @@ package fa.dfa;
 import fa.State;
 
 public class DFAState extends State {
-    //Fields
-    private final String name;
 
     //Constructor
-    public DFAState(String name) {
-        this.name = name;
+    public DFAState() {
     }
 
     //Methods
     @Override
     public String getName(){
         return name;
+    }
+
+    public void setName(String newName){
+        name = newName;
     }
 }

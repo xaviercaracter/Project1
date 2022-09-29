@@ -2,24 +2,33 @@ package fa.dfa;
 
 import fa.State;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class DFA implements DFAInterface {
 
     //Fields
     //F = Final state, set of DFAState
-    Set<DFAState> F = new HashSet<DFAState>();
-    //Q0 = Initial State, set of DFAstate
-    Set<DFAState> q0 = new HashSet<DFAState>();
+    Set<DFAState> F;
+    //Q0 = Initial State
+    DFAState q0;
     //Sigma = set containing language
-    Set<String> Sigma = new HashSet<String>();
+    Set<Character> Sigma;
     //Q = set of all states
-    Set<DFAState> Q = new HashSet<DFAState>();
+    Set<DFAState> Q;
     //delta = map containing transition function table
+    Map<DFAState, Map<Character, DFAState>> Delta;
 
     //Constructor
-
+    public DFA(){
+        this.F = new HashSet<>();
+        this.q0 = new DFAState();
+        this.Sigma = new HashSet<>();
+        this.Q = new HashSet<>();
+        this.Delta = new HashMap<>();
+    }
 
 
 
@@ -33,9 +42,8 @@ public class DFA implements DFAInterface {
      */
     @Override
     public void addStartState(String name) {
-        DFAState startState = new DFAState(name);
-        q0.add(startState);
-        Q.add(startState);
+        q0.setName(name);
+        Q.add(q0);
     }
 
     /**
@@ -45,7 +53,8 @@ public class DFA implements DFAInterface {
      */
     @Override
     public void addState(String name) {
-        DFAState states = new DFAState(name);
+        DFAState states = new DFAState();
+        states.setName(name);
         Q.add(states);
     }
 
@@ -56,7 +65,8 @@ public class DFA implements DFAInterface {
      */
     @Override
     public void addFinalState(String name) {
-        DFAState finalState = new DFAState(name);
+        DFAState finalState = new DFAState();
+        finalState.setName(name);
         F.add(finalState);
         Q.add(finalState);
     }
@@ -70,7 +80,19 @@ public class DFA implements DFAInterface {
      */
     @Override
     public void addTransition(String fromState, char onSymb, String toState) {
-
+        Sigma.add(onSymb);
+        DFAState from = new DFAState();
+        DFAState to = new DFAState();
+        from.setName(fromState);
+        to.setName(toState);
+        if(!Delta.containsKey(from)){
+            Map<Character, DFAState> value = new HashMap<>();
+            Delta.put(from, value);
+            value.put(onSymb, to);
+        } else {
+            Map<Character, DFAState> value = Delta.get(from);
+            value.put(onSymb, to);
+        }
     }
 
     /**
@@ -80,7 +102,7 @@ public class DFA implements DFAInterface {
      */
     @Override
     public Set<? extends State> getStates() {
-        return null;
+        return Q;
     }
 
     /**
@@ -90,7 +112,7 @@ public class DFA implements DFAInterface {
      */
     @Override
     public Set<? extends State> getFinalStates() {
-        return null;
+        return F;
     }
 
     /**
@@ -98,9 +120,8 @@ public class DFA implements DFAInterface {
      *
      * @return the start state of FA
      */
-    @Override
     public State getStartState() {
-        return null;
+        return q0;
     }
 
     /**
@@ -110,7 +131,7 @@ public class DFA implements DFAInterface {
      */
     @Override
     public Set<Character> getABC() {
-        return null;
+        return Sigma;
     }
 
     /**
@@ -134,7 +155,11 @@ public class DFA implements DFAInterface {
      */
     @Override
     public State getToState(DFAState from, char onSymb) {
-        return null;
+        DFAState toState = Delta.get(from).get(onSymb);
+        if(toState == null){
+            throw new NullPointerException("Looks like the input data " + from.getName() + " " + onSymb + " didn't work.");
+        } else
+            return toState;
     }
 
     /**
@@ -147,5 +172,62 @@ public class DFA implements DFAInterface {
     @Override
     public DFA complement() {
         return null;
+    }
+
+    public String printQ(){
+        String qElems="";
+        qElems += "Q = { ";
+        for(DFAState Qs : Q){
+            qElems += Qs + " ";
+        }
+        qElems += "}";
+        return qElems;
+    }
+
+    public String printFs(){
+        String fElems="";
+        fElems += "F = { ";
+        for(DFAState Fs : F){
+            fElems += Fs + " ";
+        }
+        fElems += "}";
+        return fElems;
+    }
+
+    public String printSigma(){
+        String sigElems="";
+        sigElems += "Sigma = { ";
+        for(Character sigmas : Sigma){
+            sigElems += sigmas + " ";
+        }
+        sigElems += "}";
+        return sigElems;
+    }
+
+    public String printDelta(){
+        String deltaString = "";
+        deltaString += "delta = \n";
+        deltaString += "\t\t";
+        for(Character sigmas : Sigma){
+            deltaString += sigmas + "\t";
+        }
+        deltaString += "\n";
+        for(DFAState Qs : Q){
+            deltaString += "\t" +Qs;
+            for(Character sigs : Sigma) {
+                 deltaString += "\t" + getToState(Qs, sigs).getName();
+            }
+            deltaString += "\n";
+        }
+
+            //getToState().getName();
+
+        return deltaString;
+    }
+
+
+    public String toString() {
+
+        return "q0 = " + q0.getName() + "\n" + printFs() + "\n" + printQ() + "\n" + printSigma()+ "\n" + printDelta();
     }
 }
