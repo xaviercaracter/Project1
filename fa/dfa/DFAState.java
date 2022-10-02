@@ -42,7 +42,7 @@ public class DFAState extends State {
     }
 
     /**
-     * Retruns the correct DFAState according to the transition symbol
+     * Returns the correct DFAState according to the transition symbol
      * @param toSymb char transition symbol
      * @return DFAState we are looking for according to toSymb
      */
