@@ -2,10 +2,17 @@ package fa.dfa;
 
 import fa.State;
 
+import java.util.HashMap;
+
 public class DFAState extends State {
 
+    //Fields
+    private HashMap<Character, DFAState> trans;
+
     //Constructor
-    public DFAState() {
+    public DFAState(String name) {
+        this.name = name;
+        trans = new HashMap<Character, DFAState>();
     }
 
     //Methods
@@ -14,7 +21,11 @@ public class DFAState extends State {
         return name;
     }
 
-    public void setName(String newName){
-        name = newName;
+    public void toState(char tranSymb, DFAState toState){
+        trans.put(tranSymb, toState);
+    }
+
+    public DFAState getToState(char toSymb){
+        return trans.get(toSymb);
     }
 }

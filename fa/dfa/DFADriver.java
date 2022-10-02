@@ -61,6 +61,11 @@ public class DFADriver {
 			System.out.println(dfa.toString());
 			//get the compliment
 			DFA dfaC = dfa.complement();
+
+			System.out.println("COMPLIMENT");
+			System.out.println(dfaC.toString());
+			System.out.println("Original");
+			System.out.println(dfa.toString());
 			//now process the input strings
 			System.out.println("DFA\tDFA_C");
 			while(scan.hasNext()){
